@@ -12,6 +12,7 @@ interface AutomatonGraphProps {
   target?: string;
   prefix: string;
   legend?: boolean;
+  legendMode?: "construction" | "run";
 }
 
 export function AutomatonGraph({
@@ -21,6 +22,7 @@ export function AutomatonGraph({
   target,
   prefix,
   legend = false,
+  legendMode = "construction",
 }: AutomatonGraphProps) {
   const graph = automaton
     ? automatonToFlow(automaton, { prefix, highlight, target })
@@ -44,11 +46,11 @@ export function AutomatonGraph({
           </li>
           <li>
             <span className="swatch hot" />
-            Current S
+            {legendMode === "run" ? "Here" : "Current S"}
           </li>
           <li>
             <span className="swatch target" />
-            δ′(S, a)
+            {legendMode === "run" ? "Next" : "δ′(S, a)"}
           </li>
         </ul>
       )}

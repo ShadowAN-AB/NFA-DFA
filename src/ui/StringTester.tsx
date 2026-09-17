@@ -6,6 +6,8 @@ interface StringTesterProps {
   onRun: () => void;
   onPick?: (value: string) => void;
   samples?: { accept: string[]; reject: string[] };
+  pathIndex?: number;
+  onPathIndex?: (index: number) => void;
   nfaTrace?: RunTrace;
   dfaTrace?: RunTrace;
   equivalent?: boolean;
@@ -17,6 +19,8 @@ export function StringTester({
   onRun,
   onPick,
   samples,
+  pathIndex = 0,
+  onPathIndex,
   nfaTrace,
   dfaTrace,
   equivalent,
@@ -67,6 +71,43 @@ export function StringTester({
         <TraceCard title="NFA" trace={nfaTrace} />
         <TraceCard title="DFA" trace={dfaTrace} />
       </div>
+      {dfaTrace && dfaTrace.path.length > 0 && (
+        <div className="path-walk">
+          <div className="step-controls">
+            <button
+              type="button"
+              className="ghost"
+              onClick={() => onPathIndex?.(Math.max(0, pathIndex - 1))}
+              disabled={pathIndex <= 0}
+            >
+              Previous
+            </button>
+            <span className="step-count">
+              After {pathIndex === 0 ? "ε" : `"${dfaTrace.input.slice(0, pathIndex)}"`} · {pathIndex + 1} of {dfaTrace.path.length}
+            </span>
+            <button
+              type="button"
+              className="ghost"
+              onClick={() => onPathIndex?.(Math.min(dfaTrace.path.length - 1, pathIndex + 1))}
+              disabled={pathIndex >= dfaTrace.path.length - 1}
+            >
+              Next
+            </button>
+          </div>
+          <div className="chips">
+            {dfaTrace.path.map((state, index) => (
+              <button
+                key={`${state}-${index}`}
+                type="button"
+                className={pathIndex === index ? "chip is-active" : "chip"}
+                onClick={() => onPathIndex?.(index)}
+              >
+                {index === 0 ? "ε" : dfaTrace.input[index - 1]} → {state}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -38,6 +38,7 @@ function Workbench() {
   const [nfaTrace, setNfaTrace] = useState<RunTrace>();
   const [dfaTrace, setDfaTrace] = useState<RunTrace>();
   const [equivalent, setEquivalent] = useState<boolean>();
+  const [pathIndex, setPathIndex] = useState(0);
   const activePreset = presets.find((item) => item.id === presetId);
 
   const highlight = useMemo(() => {
@@ -47,6 +48,13 @@ function Workbench() {
     const step = conversion.steps.find((item) => item.step === selectedStep);
     return { current: step?.currentLabel, target: step?.resultLabel };
   }, [conversion, selectedStep]);
+
+  const dfaHighlight = dfaTrace
+    ? {
+        current: dfaTrace.path[pathIndex],
+        target: dfaTrace.path[pathIndex + 1],
+      }
+    : highlight;
 
   const loadPreset = (id: string) => {
     setPresetId(id);
@@ -87,21 +95,28 @@ function Workbench() {
     clearRun();
   };
 
-  const runTest = () => {
+  const applyRun = (input: string) => {
     if (!nfa) {
       setIssues(["Convert a valid NFA before testing strings."]);
       return;
     }
-    const result = compareMachines(nfa, testString);
+    const result = compareMachines(nfa, input);
+    setTestString(input);
     setNfaTrace(result.nfaTrace);
     setDfaTrace(result.dfaTrace);
     setEquivalent(result.equivalent);
+    setPathIndex(Math.max(0, result.dfaTrace.path.length - 1));
+  };
+
+  const runTest = () => {
+    applyRun(testString);
   };
 
   const clearRun = () => {
     setNfaTrace(undefined);
     setDfaTrace(undefined);
     setEquivalent(undefined);
+    setPathIndex(0);
   };
 
   useEffect(() => {
@@ -168,8 +183,8 @@ function Workbench() {
           <TransitionTable
             title="DFA table"
             automaton={conversion?.dfa}
-            highlight={highlight.current}
-            target={highlight.target}
+            highlight={dfaHighlight.current}
+            target={dfaHighlight.target}
           />
         </div>
 
@@ -178,27 +193,20 @@ function Workbench() {
           <AutomatonGraph
             title="Generated DFA"
             automaton={conversion?.dfa}
-            highlight={highlight.current}
-            target={highlight.target}
+            highlight={dfaHighlight.current}
+            target={dfaHighlight.target}
             prefix="dfa"
             legend
+            legendMode={dfaTrace ? "run" : "construction"}
           />
           <StringTester
             value={testString}
             onChange={setTestString}
             onRun={runTest}
-            onPick={(sample) => {
-              setTestString(sample);
-              if (!nfa) {
-                setIssues(["Convert a valid NFA before testing strings."]);
-                return;
-              }
-              const result = compareMachines(nfa, sample);
-              setNfaTrace(result.nfaTrace);
-              setDfaTrace(result.dfaTrace);
-              setEquivalent(result.equivalent);
-            }}
+            onPick={applyRun}
             samples={activePreset?.samples}
+            pathIndex={pathIndex}
+            onPathIndex={setPathIndex}
             nfaTrace={nfaTrace}
             dfaTrace={dfaTrace}
             equivalent={equivalent}

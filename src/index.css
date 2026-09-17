@@ -336,6 +336,12 @@ tbody tr.is-selected {
   color: #f7f3ea;
 }
 
+.path-walk {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
 .legend {
   display: flex;
   flex-wrap: wrap;
