@@ -7,6 +7,7 @@ interface NfaBuilderProps {
   onPreset: (id: string) => void;
   onConvert: () => void;
   selectedPreset: string;
+  presetDescription?: string;
 }
 
 export function NfaBuilder({
@@ -15,6 +16,7 @@ export function NfaBuilder({
   onPreset,
   onConvert,
   selectedPreset,
+  presetDescription,
 }: NfaBuilderProps) {
   const update = (patch: Partial<NfaDraft>) => onChange({ ...draft, ...patch });
 
@@ -44,7 +46,7 @@ export function NfaBuilder({
     <section className="panel">
       <header className="panel-head">
         <h2>NFA input</h2>
-        <p>User-defined automaton. Load a preset or type your own.</p>
+        <p>{presetDescription ?? "User-defined automaton. Load a preset or type your own."}</p>
       </header>
 
       <label className="field">

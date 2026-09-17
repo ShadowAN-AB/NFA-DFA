@@ -37,6 +37,7 @@ function Workbench() {
   const [nfaTrace, setNfaTrace] = useState<RunTrace>();
   const [dfaTrace, setDfaTrace] = useState<RunTrace>();
   const [equivalent, setEquivalent] = useState<boolean>();
+  const activePreset = presets.find((item) => item.id === presetId);
 
   const highlight = useMemo(() => {
     if (!conversion || selectedStep === null) {
@@ -57,6 +58,7 @@ function Workbench() {
     setConversion(undefined);
     setIssues([]);
     setSelectedStep(null);
+    setTestString(preset.samples.accept[0] ?? "aab");
     clearRun();
   };
 
@@ -147,6 +149,7 @@ function Workbench() {
         <NfaBuilder
           draft={draft}
           selectedPreset={presetId}
+          presetDescription={activePreset?.description}
           onChange={changeDraft}
           onPreset={loadPreset}
           onConvert={convert}
@@ -176,6 +179,18 @@ function Workbench() {
             value={testString}
             onChange={setTestString}
             onRun={runTest}
+            onPick={(sample) => {
+              setTestString(sample);
+              if (!nfa) {
+                setIssues(["Convert a valid NFA before testing strings."]);
+                return;
+              }
+              const result = compareMachines(nfa, sample);
+              setNfaTrace(result.nfaTrace);
+              setDfaTrace(result.dfaTrace);
+              setEquivalent(result.equivalent);
+            }}
+            samples={activePreset?.samples}
             nfaTrace={nfaTrace}
             dfaTrace={dfaTrace}
             equivalent={equivalent}

@@ -286,6 +286,46 @@ tbody tr.is-selected {
   margin: 0;
 }
 
+.sample-board {
+  display: grid;
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+
+.sample-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sample-row > span {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  min-width: 7.5rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: #fffdf8;
+  color: var(--ink);
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--ink);
+}
+
 .verdict {
   margin: 8px 0;
   padding: 8px 10px;
