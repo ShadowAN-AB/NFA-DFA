@@ -229,6 +229,45 @@ tbody tr.is-selected {
   border-color: var(--hot);
 }
 
+.auto-node.is-target {
+  background: #dce8e2;
+  border-color: var(--forest);
+}
+
+.step-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.step-count {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.step-explain {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: #fffdf8;
+  font-size: 13px;
+}
+
+.ghost {
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.ghost:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .auto-node-label {
   display: block;
   font-size: 13px;
@@ -284,6 +323,11 @@ tbody tr.is-selected {
 
 .banner p {
   margin: 0;
+}
+
+.summary-line {
+  margin: 0 0 6px;
+  font-size: 13px;
 }
 
 @media (max-width: 1100px) {

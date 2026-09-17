@@ -1,5 +1,5 @@
 import { ReactFlowProvider } from "@xyflow/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   compareMachines,
   nfaToDfa,
@@ -8,6 +8,7 @@ import {
   type RunTrace,
 } from "./engine";
 import { AutomatonGraph } from "./ui/AutomatonGraph";
+import { ConversionSummary } from "./ui/ConversionSummary";
 import { NfaBuilder } from "./ui/NfaBuilder";
 import { nfaToDraft, parseDraft, type NfaDraft } from "./ui/parseDraft";
 import { presets } from "./ui/presets";
@@ -39,9 +40,10 @@ function Workbench() {
 
   const highlight = useMemo(() => {
     if (!conversion || selectedStep === null) {
-      return undefined;
+      return { current: undefined as string | undefined, target: undefined as string | undefined };
     }
-    return conversion.steps.find((step) => step.step === selectedStep)?.currentLabel;
+    const step = conversion.steps.find((item) => item.step === selectedStep);
+    return { current: step?.currentLabel, target: step?.resultLabel };
   }, [conversion, selectedStep]);
 
   const loadPreset = (id: string) => {
@@ -51,7 +53,7 @@ function Workbench() {
       return;
     }
     setDraft(nfaToDraft(preset.nfa));
-    setNfa(undefined);
+    setNfa(preset.nfa);
     setConversion(undefined);
     setIssues([]);
     setSelectedStep(null);
@@ -98,6 +100,27 @@ function Workbench() {
     setEquivalent(undefined);
   };
 
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (!conversion || selectedStep === null) {
+        return;
+      }
+      const target = event.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "SELECT" || target.tagName === "TEXTAREA")) {
+        return;
+      }
+      const index = conversion.steps.findIndex((step) => step.step === selectedStep);
+      if (event.key === "ArrowRight" && index < conversion.steps.length - 1) {
+        setSelectedStep(conversion.steps[index + 1].step);
+      }
+      if (event.key === "ArrowLeft" && index > 0) {
+        setSelectedStep(conversion.steps[index - 1].step);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [conversion, selectedStep]);
+
   return (
     <div className="app">
       <header className="topbar">
@@ -107,7 +130,8 @@ function Workbench() {
         </div>
         <p className="lede">
           NFA to DFA by subset construction. Enter an automaton, inspect every
-          subset, then validate strings on both machines.
+          subset, then validate strings on both machines. After convert, use
+          Next or the arrow keys to walk the worklist.
         </p>
       </header>
 
@@ -129,6 +153,7 @@ function Workbench() {
         />
 
         <div className="column">
+          <ConversionSummary result={conversion} />
           <StepTable
             steps={conversion?.steps ?? []}
             selected={selectedStep}
@@ -143,7 +168,8 @@ function Workbench() {
           <AutomatonGraph
             title="Generated DFA"
             automaton={conversion?.dfa}
-            highlight={highlight}
+            highlight={highlight.current}
+            target={highlight.target}
             prefix="dfa"
           />
           <StringTester

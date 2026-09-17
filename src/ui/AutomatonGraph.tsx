@@ -9,12 +9,13 @@ interface AutomatonGraphProps {
   title: string;
   automaton?: NFA | DFA;
   highlight?: string;
+  target?: string;
   prefix: string;
 }
 
-export function AutomatonGraph({ title, automaton, highlight, prefix }: AutomatonGraphProps) {
+export function AutomatonGraph({ title, automaton, highlight, target, prefix }: AutomatonGraphProps) {
   const graph = automaton
-    ? automatonToFlow(automaton, { prefix, highlight })
+    ? automatonToFlow(automaton, { prefix, highlight, target })
     : { nodes: [], edges: [] };
 
   return (

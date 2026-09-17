@@ -10,4 +10,15 @@ describe("automatonToFlow", () => {
     expect(q0Loop?.label).toContain("a");
     expect(q0Loop?.label).toContain("b");
   });
+
+  it("marks highlight and target states", () => {
+    const { nodes } = automatonToFlow(endsWithAb, {
+      prefix: "nfa",
+      highlight: "q0",
+      target: "q2",
+    });
+    const data = Object.fromEntries(nodes.map((node) => [node.id, node.data]));
+    expect(data["nfa:q0"]).toMatchObject({ highlight: true, target: false });
+    expect(data["nfa:q2"]).toMatchObject({ highlight: false, target: true });
+  });
 });

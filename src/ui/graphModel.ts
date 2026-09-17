@@ -3,6 +3,7 @@ import type { DFA, NFA } from "../engine";
 
 interface GraphOptions {
   highlight?: string;
+  target?: string;
   prefix: string;
 }
 
@@ -10,7 +11,7 @@ export function automatonToFlow(
   automaton: NFA | DFA,
   options: GraphOptions,
 ): { nodes: Node[]; edges: Edge[] } {
-  const { prefix, highlight } = options;
+  const { prefix, highlight, target } = options;
   const count = automaton.states.length || 1;
 
   const nodes: Node[] = automaton.states.map((state, index) => {
@@ -27,6 +28,7 @@ export function automatonToFlow(
         start: state === automaton.start,
         accept: automaton.accept.includes(state),
         highlight: state === highlight,
+        target: state === target,
       },
       type: "automaton",
       draggable: true,
