@@ -45,7 +45,7 @@ export function StepTable({ steps, selected, onSelect }: StepTableProps) {
             </button>
           </div>
           {current && <p className="step-explain">{explainStep(current)}</p>}
-          <div className="table-wrap">
+          <div className="table-wrap clickable-rows">
             <table>
               <thead>
                 <tr>
@@ -65,10 +65,10 @@ export function StepTable({ steps, selected, onSelect }: StepTableProps) {
                     onClick={() => onSelect(step.step)}
                   >
                     <td>{step.step}</td>
-                    <td>{step.currentLabel}</td>
+                    <td className="cell-current">{step.currentLabel}</td>
                     <td>{step.symbol}</td>
                     <td>{step.unionResult.length === 0 ? "∅" : `{${step.unionResult.join(",")}}`}</td>
-                    <td>{step.resultLabel}</td>
+                    <td className="cell-target">{step.resultLabel}</td>
                     <td>{step.isNewState ? "yes" : "no"}</td>
                   </tr>
                 ))}

@@ -193,6 +193,10 @@ td {
 }
 
 tbody tr {
+  cursor: default;
+}
+
+.clickable-rows tbody tr {
   cursor: pointer;
 }
 
@@ -324,6 +328,100 @@ tbody tr.is-selected {
 
 .chip:hover {
   border-color: var(--ink);
+}
+
+.chip.is-active {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #f7f3ea;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--ink);
+  background: #fffdf8;
+}
+
+.swatch.start {
+  border-color: var(--accent);
+}
+
+.swatch.accept {
+  box-shadow: inset 0 0 0 2px #fffdf8, inset 0 0 0 3px var(--ink);
+}
+
+.swatch.hot {
+  background: #f3d7bf;
+  border-color: var(--hot);
+}
+
+.swatch.target {
+  background: #dce8e2;
+  border-color: var(--forest);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.metric {
+  border: 1px solid var(--line);
+  background: #fffdf8;
+  padding: 8px 10px;
+}
+
+.metric span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.metric strong {
+  font-size: 20px;
+  letter-spacing: -0.03em;
+}
+
+tr.is-hot {
+  background: #f3d7bf;
+}
+
+tr.is-target {
+  background: #dce8e2;
+}
+
+tr.is-selected .cell-current {
+  color: var(--hot);
+  font-weight: 600;
+}
+
+tr.is-selected .cell-target {
+  color: var(--forest);
+  font-weight: 600;
 }
 
 .verdict {

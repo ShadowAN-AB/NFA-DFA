@@ -11,9 +11,17 @@ interface AutomatonGraphProps {
   highlight?: string;
   target?: string;
   prefix: string;
+  legend?: boolean;
 }
 
-export function AutomatonGraph({ title, automaton, highlight, target, prefix }: AutomatonGraphProps) {
+export function AutomatonGraph({
+  title,
+  automaton,
+  highlight,
+  target,
+  prefix,
+  legend = false,
+}: AutomatonGraphProps) {
   const graph = automaton
     ? automatonToFlow(automaton, { prefix, highlight, target })
     : { nodes: [], edges: [] };
@@ -24,6 +32,26 @@ export function AutomatonGraph({ title, automaton, highlight, target, prefix }: 
         <h2>{title}</h2>
         <p>{automaton ? `${automaton.states.length} states` : "Convert an NFA to see the machine."}</p>
       </header>
+      {legend && (
+        <ul className="legend">
+          <li>
+            <span className="swatch start" />
+            Start
+          </li>
+          <li>
+            <span className="swatch accept" />
+            Accept
+          </li>
+          <li>
+            <span className="swatch hot" />
+            Current S
+          </li>
+          <li>
+            <span className="swatch target" />
+            δ′(S, a)
+          </li>
+        </ul>
+      )}
       <div className="graph-canvas">
         <ReactFlow
           nodes={graph.nodes}

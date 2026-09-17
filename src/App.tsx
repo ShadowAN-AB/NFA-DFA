@@ -163,17 +163,23 @@ function Workbench() {
             onSelect={setSelectedStep}
           />
           <TransitionTable title="NFA table" automaton={nfa} />
-          <TransitionTable title="DFA table" automaton={conversion?.dfa} />
+          <TransitionTable
+            title="DFA table"
+            automaton={conversion?.dfa}
+            highlight={highlight.current}
+            target={highlight.target}
+          />
         </div>
 
         <div className="column">
-          <AutomatonGraph title="NFA" automaton={nfa} prefix="nfa" />
+          <AutomatonGraph title="NFA" automaton={nfa} prefix="nfa" legend />
           <AutomatonGraph
             title="Generated DFA"
             automaton={conversion?.dfa}
             highlight={highlight.current}
             target={highlight.target}
             prefix="dfa"
+            legend
           />
           <StringTester
             value={testString}

@@ -52,8 +52,8 @@ export function StringTester({
       </div>
       {samples && (
         <div className="sample-board">
-          <SampleRow label="Should accept" values={samples.accept} onPick={pick} />
-          <SampleRow label="Should reject" values={samples.reject} onPick={pick} />
+          <SampleRow label="Should accept" values={samples.accept} selected={value} onPick={pick} />
+          <SampleRow label="Should reject" values={samples.reject} selected={value} onPick={pick} />
         </div>
       )}
       {nfaTrace && dfaTrace && (
@@ -74,10 +74,12 @@ export function StringTester({
 function SampleRow({
   label,
   values,
+  selected,
   onPick,
 }: {
   label: string;
   values: string[];
+  selected: string;
   onPick: (value: string) => void;
 }) {
   return (
@@ -85,7 +87,12 @@ function SampleRow({
       <span>{label}</span>
       <div className="chips">
         {values.map((sample) => (
-          <button key={`${label}-${sample}`} type="button" className="chip" onClick={() => onPick(sample)}>
+          <button
+            key={`${label}-${sample}`}
+            type="button"
+            className={selected === sample ? "chip is-active" : "chip"}
+            onClick={() => onPick(sample)}
+          >
             {sample === "" ? "ε" : sample}
           </button>
         ))}

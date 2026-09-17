@@ -25,13 +25,20 @@ export function ConversionSummary({ result }: ConversionSummaryProps) {
         <h2>Conversion result</h2>
         <p>Summary of the subset construction that the tables and graphs display.</p>
       </header>
-      <p className="summary-line">
-        Reachable DFA states: <strong>{dfa.states.length}</strong>
-        {" · "}
-        Steps recorded: <strong>{steps.length}</strong>
-        {" · "}
-        Sink: <strong>{sink ? "yes (∅)" : "not required"}</strong>
-      </p>
+      <div className="metrics">
+        <div className="metric">
+          <span>DFA states</span>
+          <strong>{dfa.states.length}</strong>
+        </div>
+        <div className="metric">
+          <span>Worklist steps</span>
+          <strong>{steps.length}</strong>
+        </div>
+        <div className="metric">
+          <span>Sink ∅</span>
+          <strong>{sink ? "yes" : "no"}</strong>
+        </div>
+      </div>
       <p className="summary-line">
         Start: <strong>{dfa.start}</strong>
         {" · "}
