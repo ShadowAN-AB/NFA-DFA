@@ -17,6 +17,7 @@ import { StringTester } from "./ui/StringTester";
 import { TransitionTable } from "./ui/TransitionTable";
 
 const firstPreset = presets[0];
+const firstConversion = nfaToDfa(firstPreset.nfa);
 
 export default function App() {
   return (
@@ -30,10 +31,10 @@ function Workbench() {
   const [presetId, setPresetId] = useState(firstPreset.id);
   const [draft, setDraft] = useState<NfaDraft>(() => nfaToDraft(firstPreset.nfa));
   const [nfa, setNfa] = useState<NFA | undefined>(firstPreset.nfa);
-  const [conversion, setConversion] = useState<ConversionResult | undefined>();
-  const [issues, setIssues] = useState<string[]>([]);
-  const [selectedStep, setSelectedStep] = useState<number | null>(null);
-  const [testString, setTestString] = useState("aab");
+  const [conversion, setConversion] = useState<ConversionResult | undefined>(firstConversion);
+  const [issues, setIssues] = useState<string[]>(firstConversion.warnings);
+  const [selectedStep, setSelectedStep] = useState<number | null>(firstConversion.steps[0]?.step ?? null);
+  const [testString, setTestString] = useState(firstPreset.samples.accept[1] ?? firstPreset.samples.accept[0]);
   const [nfaTrace, setNfaTrace] = useState<RunTrace>();
   const [dfaTrace, setDfaTrace] = useState<RunTrace>();
   const [equivalent, setEquivalent] = useState<boolean>();
@@ -55,9 +56,10 @@ function Workbench() {
     }
     setDraft(nfaToDraft(preset.nfa));
     setNfa(preset.nfa);
-    setConversion(undefined);
-    setIssues([]);
-    setSelectedStep(null);
+    const result = nfaToDfa(preset.nfa);
+    setConversion(result);
+    setIssues(result.warnings);
+    setSelectedStep(result.steps[0]?.step ?? null);
     setTestString(preset.samples.accept[0] ?? "aab");
     clearRun();
   };
@@ -131,9 +133,9 @@ function Workbench() {
           <h1>SubsetLab</h1>
         </div>
         <p className="lede">
-          NFA to DFA by subset construction. Enter an automaton, inspect every
-          subset, then validate strings on both machines. After convert, use
-          Next or the arrow keys to walk the worklist.
+          NFA to DFA by subset construction. Presets convert immediately. For a
+          custom machine, edit the tables then Convert. Use Next or the arrow
+          keys to walk the worklist.
         </p>
       </header>
 
